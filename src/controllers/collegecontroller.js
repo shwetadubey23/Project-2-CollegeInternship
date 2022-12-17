@@ -3,23 +3,22 @@ const internmodel = require("../models/Intern Model")
 const validation = require('../validator/validation')
 
 
-// create college document
+// =============================create college document=========================================
 
 const createcollegedocument = async (req, res) => {
 
     try {
-        let { name, fullName, logoLink, isDeleted } = req.body
+        let { name, fullName, logoLink } = req.body
 
         if (!validation.isValidReqBody(req.body)) return res.status(400).send({ Status: false, Message: "Please! Give deatils" })
         if (!name) return res.status(400).send({ status: false, msg: "Name is mandatory" })
         if (!fullName) return res.status(400).send({ status: false, msg: "fullName is mandatory" })
         if (!logoLink) return res.status(400).send({ status: false, msg: "logoLink is mandatory" })
-
         if (!validation.isValid(name)) return res.status(400).send({ status: false, msg: "Invalid name" })
         if (!validation.isValid(fullName)) return res.status(400).send({ status: false, msg: "Invalid fullname" })
 
-        if (!validation.isValidData(name)) return res.status(400).send({ status: false, msg: "Give suitable Name ,Use only alphabets" })
-        if (!validation.isValidData(fullName)) return res.status(400).send({ status: false, msg: "Give suitable fullName ,Use only alphabets" })
+        if (!validation.regex(name)) return res.status(400).send({ status: false, msg: "Give suitable Name ,Use only alphabets" })
+        if (!validation.regex(fullName)) return res.status(400).send({ status: false, msg: "Give suitable fullName ,Use only alphabets" })
 
         let findname = await collegemodel.find({ name: name })
         if (findname.length !== 0) return res.status(400).send({ status: false, Message: "Name is already exist" })
@@ -35,10 +34,12 @@ const createcollegedocument = async (req, res) => {
     }
 }
 
-// GET COLLEGE DETAILS
+// =====================================GET COLLEGE DETAILS==================================
 
 const getcollegedetail = async (req, res) => {
+    
     try {
+        // res.setHeaders('Access-Control-Allow-Origin','*')
         let { collegeName } = req.query
 
         if (!validation.isValid(collegeName)) return res.status(400).send({ status: true, Message: "Please Enter College name" })

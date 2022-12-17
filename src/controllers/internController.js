@@ -1,15 +1,18 @@
-const { find } = require("../models/College Model");
+//const { find } = require("../models/College Model");
 const collegeModels = require("../models/College Model");
 const internModels = require("../models/Intern Model");
 const validation = require("../validator/validation")
 
 
-//CREATE INTERN
-const createInterns = async function (req, res) {
-  try {
-    let { name, email, mobile, collegeId, collegeName, isDeleted, ...rest } = req.body; // Destructing Key and Values.
+//==========================================CREATE INTERN===============================================
 
-    if (Object.keys(rest) != 0) return res.status(400).send({ status: false, msg: "Please provide required details only" })
+const createInterns = async function (req, res) {
+  
+  try {
+    // res.setHeaders('Access-Control-Allow-Origin','*')
+    let { name, email, mobile, collegeId, collegeName } = req.body; // Destructing Key and Values.
+  
+    if (!validation.isValidReqBody(req.body)) return res.status(400).send({ status: false, msg: "Please provide required details only" })
    
     if(email){
     if(!validation.isValidEmail(email)) return res.status(400).send({ status: false, msg: "Invalid Emailid" })}
